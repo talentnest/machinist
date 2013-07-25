@@ -20,5 +20,14 @@ module Machinist::ActiveRecord
       end
     end
 
+    def assign_attribute(key, value) #:nodoc:
+      @assigned_attributes[key.to_sym] = value
+
+      if @object.class.reflections.keys.include?(key)
+        @object.send("#{key}=", value)
+      else
+        @object.send(:write_attribute, key, value)
+      end
+    end
   end
 end

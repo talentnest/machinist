@@ -15,6 +15,15 @@ describe Machinist::ActiveRecord do
       post.should be_a(Post)
       post.should be_new_record
     end
+
+    it "allows attributes to be set and overridden" do
+      Post.blueprint do
+        title { "Today I went to the zoo" }
+      end
+      post = Post.make(title: "Today I went to the store", body: "I bought some cereal.")
+      post.title.should == "Today I went to the store"
+      post.body.should == "I bought some cereal."
+    end
   end
 
   context "make!" do
@@ -30,6 +39,15 @@ describe Machinist::ActiveRecord do
       lambda {
         User.make!(:username => "")
       }.should raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "allows attributes to be set and overridden" do
+      Post.blueprint do
+        title { "Today I went to the zoo" }
+      end
+      post = Post.make!(title: "Today I went to the store", body: "I bought some cereal.")
+      post.title.should == "Today I went to the store"
+      post.body.should == "I bought some cereal."
     end
   end
 
